@@ -1,0 +1,49 @@
+2018-05-06 18:47:32.603  INFO 8304 --- [main] ConfigServletWebServerApplicationContext : Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@7ce3cb8e: startup date [Sun May 06 18:47:32 CST 2018]; root of context hierarchy
+2018-05-06 18:47:33.534  INFO 8304 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2018-05-06 18:47:33.553  INFO 8304 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2018-05-06 18:47:33.553  INFO 8304 --- [main] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.29
+2018-05-06 18:47:33.558  INFO 8304 --- [localhost-startStop-1] o.a.catalina.core.AprLifecycleListener   : The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_121\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;"%JAVA_HOME%\bin;%JAVA_HOME%\jre\bin";C:\Program Files\MySQL\MySQL Utilities 1.6\;C:\Program Files\MySQL\MySQL Server 5.7\bin;D:\Study\brackets\command;G:\专业课程\办公软件\maven\apache-maven-3.5.0\bin;G:\专业课程;G:\专业课程\git\Git\cmd;G:\专业课程\git\Git;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;;.]
+2018-05-06 18:47:33.645  INFO 8304 --- [localhost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2018-05-06 18:47:33.645  INFO 8304 --- [localhost-startStop-1] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1042 ms
+2018-05-06 18:47:33.755  INFO 8304 --- [localhost-startStop-1] o.s.b.w.servlet.ServletRegistrationBean  : Servlet dispatcherServlet mapped to [/]
+2018-05-06 18:47:33.759  INFO 8304 --- [localhost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'characterEncodingFilter' to: [/*]
+2018-05-06 18:47:33.760  INFO 8304 --- [localhost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2018-05-06 18:47:33.760  INFO 8304 --- [localhost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'httpPutFormContentFilter' to: [/*]
+2018-05-06 18:47:33.760  INFO 8304 --- [localhost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'requestContextFilter' to: [/*]
+2018-05-06 18:47:34.057  INFO 8304 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-05-06 18:47:34.243  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerAdapter : Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@7ce3cb8e: startup date [Sun May 06 18:47:32 CST 2018]; root of context hierarchy
+2018-05-06 18:47:34.289  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/listCategory]}" onto public java.util.List<com.garylee.tmall_springboot.domain.Category> com.garylee.tmall_springboot.controller.CategoryController.list()
+2018-05-06 18:47:34.291  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/index]}" onto public java.lang.String com.garylee.tmall_springboot.controller.ViewController.index()
+2018-05-06 18:47:34.291  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/admin_category_list]}" onto public java.lang.String com.garylee.tmall_springboot.controller.ViewController.list()
+2018-05-06 18:47:34.291  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/adminFooter]}" onto public java.lang.String com.garylee.tmall_springboot.controller.ViewController.adminFooter()
+2018-05-06 18:47:34.291  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/adminNavigator]}" onto public java.lang.String com.garylee.tmall_springboot.controller.ViewController.adminNavigator()
+2018-05-06 18:47:34.292  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/adminPage]}" onto public java.lang.String com.garylee.tmall_springboot.controller.ViewController.adminPage()
+2018-05-06 18:47:34.292  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/adminHeader]}" onto public java.lang.String com.garylee.tmall_springboot.controller.ViewController.adminHeader()
+2018-05-06 18:47:34.296  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+2018-05-06 18:47:34.297  INFO 8304 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+2018-05-06 18:47:34.318  INFO 8304 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-05-06 18:47:34.319  INFO 8304 --- [main] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+2018-05-06 18:47:34.697  INFO 8304 --- [main] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
+2018-05-06 18:47:34.698  INFO 8304 --- [main] o.s.j.e.a.AnnotationMBeanExporter        : Bean with name 'dataSource' has been autodetected for JMX exposure
+2018-05-06 18:47:34.703  INFO 8304 --- [main] o.s.j.e.a.AnnotationMBeanExporter        : Located MBean 'dataSource': registering with JMX server as MBean [com.zaxxer.hikari:name=dataSource,type=HikariDataSource]
+2018-05-06 18:47:34.738  INFO 8304 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2018-05-06 18:47:48.433  INFO 8304 --- [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring FrameworkServlet 'dispatcherServlet'
+2018-05-06 18:47:48.434  INFO 8304 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet 'dispatcherServlet': initialization started
+2018-05-06 18:47:48.448  INFO 8304 --- [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet 'dispatcherServlet': initialization completed in 14 ms
+2018-05-06 18:47:48.687  INFO 8304 --- [http-nio-8080-exec-2] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2018-05-06 18:47:48.926  INFO 8304 --- [http-nio-8080-exec-2] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2018-05-06 18:47:48.978 DEBUG 8304 --- [http-nio-8080-exec-2] c.g.t.dao.CategoryMapper.list            : ==>  Preparing: select * from category order by id desc 
+2018-05-06 18:47:49.008 DEBUG 8304 --- [http-nio-8080-exec-2] c.g.t.dao.CategoryMapper.list            : ==> Parameters: 
+2018-05-06 18:47:49.023 DEBUG 8304 --- [http-nio-8080-exec-2] c.g.t.dao.CategoryMapper.list            : <==      Total: 17
+2018-05-06 18:47:55.321 DEBUG 8304 --- [http-nio-8080-exec-8] c.g.t.dao.CategoryMapper.list            : ==>  Preparing: select * from category order by id desc 
+2018-05-06 18:47:55.322 DEBUG 8304 --- [http-nio-8080-exec-8] c.g.t.dao.CategoryMapper.list            : ==> Parameters: 
+2018-05-06 18:47:55.324 DEBUG 8304 --- [http-nio-8080-exec-8] c.g.t.dao.CategoryMapper.list            : <==      Total: 17
+2018-05-06 18:48:04.544 DEBUG 8304 --- [http-nio-8080-exec-4] c.g.t.dao.CategoryMapper.list            : ==>  Preparing: select * from category order by id desc 
+2018-05-06 18:48:04.545 DEBUG 8304 --- [http-nio-8080-exec-4] c.g.t.dao.CategoryMapper.list            : ==> Parameters: 
+2018-05-06 18:48:04.547 DEBUG 8304 --- [http-nio-8080-exec-4] c.g.t.dao.CategoryMapper.list            : <==      Total: 17
+2018-05-06 18:48:06.474 DEBUG 8304 --- [http-nio-8080-exec-5] c.g.t.dao.CategoryMapper.list            : ==>  Preparing: select * from category order by id desc 
+2018-05-06 18:48:06.475 DEBUG 8304 --- [http-nio-8080-exec-5] c.g.t.dao.CategoryMapper.list            : ==> Parameters: 
+2018-05-06 18:48:06.477 DEBUG 8304 --- [http-nio-8080-exec-5] c.g.t.dao.CategoryMapper.list            : <==      Total: 17
+2018-05-06 18:48:10.506 DEBUG 8304 --- [http-nio-8080-exec-1] c.g.t.dao.CategoryMapper.list            : ==>  Preparing: select * from category order by id desc 
+2018-05-06 18:48:10.507 DEBUG 8304 --- [http-nio-8080-exec-1] c.g.t.dao.CategoryMapper.list            : ==> Parameters: 
+2018-05-06 18:48:10.508 DEBUG 8304 --- [http-nio-8080-exec-1] c.g.t.dao.CategoryMapper.list            : <==      Total: 17
