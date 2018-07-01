@@ -13,6 +13,10 @@ public class ViewController {
     public String list(){
         return "admin/listCategory";
     }
+    @RequestMapping("admin_category_edit")
+    public String edit(){
+        return "admin/editCategory";
+    }
     @RequestMapping("adminFooter")
     public String adminFooter(){
         return "include/admin/adminFooter";

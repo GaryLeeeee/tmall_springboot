@@ -1,13 +1,30 @@
 package com.garylee.tmall_springboot.dao;
 
 import com.garylee.tmall_springboot.domain.Category;
-import com.garylee.tmall_springboot.util.Page;
-
+import com.garylee.tmall_springboot.domain.CategoryExample;
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface CategoryMapper {
-    public List<Category> list(Page page);
-    public List<Category> listAll();
-    public int total();
-    public Category add();
+    long countByExample(CategoryExample example);
+
+    int deleteByExample(CategoryExample example);
+
+    int deleteByPrimaryKey(Integer id);
+
+    int insert(Category record);
+
+    int insertSelective(Category record);
+
+    List<Category> selectByExample(CategoryExample example);
+
+    Category selectByPrimaryKey(Integer id);
+
+    int updateByExampleSelective(@Param("record") Category record, @Param("example") CategoryExample example);
+
+    int updateByExample(@Param("record") Category record, @Param("example") CategoryExample example);
+
+    int updateByPrimaryKeySelective(Category record);
+
+    int updateByPrimaryKey(Category record);
 }

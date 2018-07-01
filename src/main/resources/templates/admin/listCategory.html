@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>后台-分类管理</title>
     <script src="js/jquery/2.0.0/jquery.min.js"></script>
     <script src="js/listCategory.js"></script>
     <link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
@@ -23,6 +23,17 @@
         });
         $("ul.pagination li.disabled a").click(function () {
             return false;
+        });
+        $("a").click(function(){
+            var deleteLink = $(this).attr("deleteLink");
+            console.log(deleteLink);
+            if("true"==deleteLink){
+                var confirmDelete = confirm("确认要删除");
+                if(confirmDelete)
+                    return true;
+                return false;
+
+            }
         });
     });
     initCategory();
