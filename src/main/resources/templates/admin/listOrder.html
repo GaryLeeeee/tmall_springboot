@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单管理</title>
+    <script src="js/jquery/2.0.0/jquery.min.js"></script>
+    <!--<script src="js/listCategory.js"></script>-->
+    <link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap/3.3.6/bootstrap.min.js"></script>
+    <link href="css/back/style.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://how2j.cn/study/axios.min.js"></script>
+</head>
+<script>
+    $(function () {
+        $('.adminHeader').load("adminHeader");
+        $('.adminNavigator').load("adminNavigator");
+    })
+</script>
+<body>
+<div class="adminHeader"></div>
+<div class="adminNavigator"></div>
+<div class="workingArea" id="demo">
+    <h1 class="label label-info" >订单管理</h1>
+    <br>
+    <br>
+
+    <div class="listDataTableDiv">
+        <table class="table table-striped table-bordered table-hover1  table-condensed">
+            <thead>
+            <tr class="success">
+                <th>ID</th>
+                <th>状态</th>
+                <th>金额</th>
+                <th width="100px">商品数量</th>
+                <th width="100px">买家名称</th>
+                <th>创建时间</th>
+                <th>支付时间</th>
+                <th>发货时间</th>
+                <th>确认收货时间</th>
+                <th width="120px">操作</th>
+            </tr>
+            </thead>
+            <tbody v-for="o in order">
+                <tr>
+                    <td>{{o.id}}</td>
+                    <td>{{o.statusDesc}}</td>
+                    <td>{{o.total}}</td>
+                    <td align="center">{{o.totalNumber}}</td>
+                    <td align="center">{{o.user.name}}</td>
+
+                    <!--<td>{{o.createDate}}</td>-->
+                    <!--<td>{{o.payDate}}</td>-->
+                    <!--<td>{{o.deliveryDate}}</td>-->
+                    <!--<td>{{o.confirmDate}}</td>   -->
+                    <!--日期格式化输出，通过Vue的过滤器-->
+                    <td>{{o.createDate | dataFormat('yyyy-MM-dd hh:mm:ss')}}</td>
+                    <td>{{o.payDate | dataFormat('yyyy-MM-dd hh:mm:ss')}}</td>
+                    <td>{{o.deliveryDate | dataFormat('yyyy-MM-dd hh:mm:ss')}}</td>
+                    <td>{{o.confirmDate | dataFormat('yyyy-MM-dd hh:mm:ss')}}</td>
+
+                    <td>
+                        <button :oid="[o.id]" class="orderPageCheckOrderItems btn btn-primary btn-xs" @click="watchDetail">查看详情</button>
+
+                        <a :href="['admin_order_delivery?id='+o.id]" v-if="o.status=='waitDelivery'">
+                            <button class="btn btn-primary btn-xs">发货</button>
+                        </a>
+                    </td>
+                </tr>
+                <!--订单详情-->
+                <tr class="orderPageOrderItemTR"  :oid="[o.id]">
+                    <td colspan="10" align="center">
+
+                        <div  class="orderPageOrderItem">
+                            <table width="800px" align="center" class="orderPageOrderItemTable">
+                                    <tr v-for="oi in o.orderItems">
+                                        <td align="left">
+                                            <img width="40px" height="40px" src="http://p8iu5y6va.bkt.clouddn.com/82.jpg">
+                                            <!---->
+                                        </td>
+
+                                        <td>
+                                            <a :href="['foreproduct?pid='+oi.product.id]">
+                                                <span>{{oi.product.name}}</span>
+                                            </a>
+                                        </td>
+                                        <td align="right">
+
+                                            <span class="text-muted">{{oi.number}}个</span>
+                                        </td>
+                                        <td align="right">
+
+                                            <span class="text-muted">单价：￥{{oi.product.promotePrice}}</span>
+                                        </td>
+
+                                    </tr>
+
+                            </table>
+                        </div>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pageDiv">
+        <nav class="">
+            <ul class="pagination">
+                <li>
+                    <a aria-label="Previous" id="index">
+                        <span aria-hidden="true">«</span>
+                    </a>
+                </li>
+                <li>
+                    <a aria-label="Previous" id="previous">
+                        <span aria-hidden="true">‹</span>
+                    </a>
+                </li>
+                <li v-for="index in page.pages">
+                    <a href="#" @click="goTo">{{index}}</a>
+                </li>
+
+
+                <li>
+                    <a aria-label="Next" id="next">
+                        <span aria-hidden="true">›</span>
+                    </a>
+                </li>
+                <li>
+                    <a aria-label="Next" id="last">
+                        <span aria-hidden="true">»</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+<script>
+    //    过滤器(将date格式化输出)
+    Vue.filter('dataFormat', function (value, fmt) {
+        let getDate = new Date(value);
+        let o = {
+            'M+': getDate.getMonth() + 1,
+            'd+': getDate.getDate(),
+            'h+': getDate.getHours(),
+            'm+': getDate.getMinutes(),
+            's+': getDate.getSeconds(),
+            'q+': Math.floor((getDate.getMonth() + 3) / 3),
+            'S': getDate.getMilliseconds()
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (getDate.getFullYear() + '').substr(4 - RegExp.$1.length))
+        }
+        for (let k in o) {
+            if (new RegExp('(' + k + ')').test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+            }
+        }
+        return fmt;
+    });
+    new Vue({
+        el:"#demo",
+        data:{
+            page:[],
+            order:[]
+        },
+        mounted:function () {
+            var self = this;
+            $.get(
+                "listOrder",
+                function (data) {
+                    self.page = data;
+                    self.order = data.list;
+                    //此处的事件监听放在head内会无法正常使用($只能获取已加载完的)
+                    $(function () {
+
+                    })
+                }
+            )
+        },
+        methods:{
+            goTo:function (event) {
+//                获取当前标签的文本值
+                var text = event.target.innerHTML;
+                console.log("点击事件:"+text);
+                var self = this;
+                $.get(
+                    "listOrder",
+                    {start: text},
+                    function (data) {
+                        self.page = data;
+                        self.order = data.list;
+                    }
+                );
+            },
+            //查看详情，即通过事件监听切换详情行的显示(toggle)
+            watchDetail:function (event) {
+                var oid = $(event.target).attr("oid");
+                $("tr.orderPageOrderItemTR[oid="+oid+"]").toggle();
+            }
+        }
+    });
+</script>
+</body>
+</html>

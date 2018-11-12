@@ -102,20 +102,17 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.garylee.tmall_springboot.domain.Product">
-    insert into product (id, name, subTitle, 
-      originalPrice, promotePrice, stock, 
-      cid, createDate)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{subTitle,jdbcType=VARCHAR}, 
-      #{originalPrice,jdbcType=REAL}, #{promotePrice,jdbcType=REAL}, #{stock,jdbcType=INTEGER}, 
-      #{cid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.Product" useGeneratedKeys="true">
+    insert into product (name, subTitle, originalPrice, 
+      promotePrice, stock, cid, 
+      createDate)
+    values (#{name,jdbcType=VARCHAR}, #{subTitle,jdbcType=VARCHAR}, #{originalPrice,jdbcType=REAL}, 
+      #{promotePrice,jdbcType=REAL}, #{stock,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.garylee.tmall_springboot.domain.Product">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.Product" useGeneratedKeys="true">
     insert into product
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="name != null">
         name,
       </if>
@@ -139,9 +136,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>

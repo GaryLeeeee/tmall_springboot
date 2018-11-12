@@ -108,24 +108,21 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.garylee.tmall_springboot.domain.Order">
-    insert into order_ (id, orderCode, address, 
-      post, receiver, mobile, 
-      userMessage, createDate, payDate, 
-      deliveryDate, confirmDate, uid, 
-      status)
-    values (#{id,jdbcType=INTEGER}, #{orderCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{post,jdbcType=VARCHAR}, #{receiver,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{userMessage,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{payDate,jdbcType=TIMESTAMP}, 
-      #{deliveryDate,jdbcType=TIMESTAMP}, #{confirmDate,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER}, 
-      #{status,jdbcType=VARCHAR})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.Order" useGeneratedKeys="true">
+    insert into order_ (orderCode, address, post, 
+      receiver, mobile, userMessage, 
+      createDate, payDate, deliveryDate, 
+      confirmDate, uid, status
+      )
+    values (#{orderCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{post,jdbcType=VARCHAR}, 
+      #{receiver,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{userMessage,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{payDate,jdbcType=TIMESTAMP}, #{deliveryDate,jdbcType=TIMESTAMP}, 
+      #{confirmDate,jdbcType=TIMESTAMP}, #{uid,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.garylee.tmall_springboot.domain.Order">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.Order" useGeneratedKeys="true">
     insert into order_
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="orderCode != null">
         orderCode,
       </if>
@@ -164,9 +161,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="orderCode != null">
         #{orderCode,jdbcType=VARCHAR},
       </if>

@@ -41,7 +41,8 @@ public class CategoryServiceImpl implements CategoryService{
 //        categoryMapper.add(category);
         categoryMapper.insert(category);
     }
-
+//    保存到本地，并上传到七牛云
+// TODO: 2018/7/17 0017 待看懂原理
     public void up(MultipartFile multipartFile,Category category) {
 //        File imgFolder = new File("src\\main\\resources\\static\\img\\category");
         File imgFolder = new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\category");
@@ -49,8 +50,8 @@ public class CategoryServiceImpl implements CategoryService{
         System.out.println("id:"+category.getId());
         File file = new File(imgFolder,category.getId()+".jpg");
         //删除云上对应的已有资源(如果存在)
-        if(imgFolder.exists())
-            fileUp.delete(category.getId()+".jpg");
+        if(file.exists())
+            fileUp.delete(category.getId()+".jpg","category");
         if(!file.getParentFile().exists())
             file.getParentFile().mkdirs();
         try {
@@ -61,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService{
             e.printStackTrace();
         }
         //上传到七牛云(以用户名id为名)
-        fileUp.uploaded(category.getId());
+        fileUp.uploaded(category.getId()+".jpg","category");
     }
 
     @Override

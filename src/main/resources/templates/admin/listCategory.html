@@ -21,20 +21,10 @@
                 return false;
             return true;
         });
-        $("ul.pagination li.disabled a").click(function () {
-            return false;
-        });
-        $("a").click(function(){
-            var deleteLink = $(this).attr("deleteLink");
-            console.log(deleteLink);
-            if("true"==deleteLink){
-                var confirmDelete = confirm("确认要删除");
-                if(confirmDelete)
-                    return true;
-                return false;
-
-            }
-        });
+//        该操作为取消a的点击事件(href),该项目为直接判断有无前后页才设置href，故可去掉
+//        $("ul.pagination li.disabled a").click(function () {
+//            return false;
+//        });
     });
     initCategory();
 </script>
@@ -68,22 +58,22 @@
     <nav class="">
         <ul class="pagination">
         <li>
-            <a href="#" aria-label="Previous" id="index">
+            <a aria-label="Previous" id="index">
                 <span aria-hidden="true">«</span>
             </a>
         </li>
         <li>
-            <a href="#" aria-label="Previous" id="previous">
+            <a aria-label="Previous" id="previous">
                 <span aria-hidden="true">‹</span>
             </a>
         </li>
         <li>
-            <a href="#" aria-label="Next" id="next">
+            <a aria-label="Next" id="next">
                 <span aria-hidden="true">›</span>
             </a>
         </li>
         <li>
-            <a href="#" aria-label="Next" id="last">
+            <a aria-label="Next" id="last">
                 <span aria-hidden="true">»</span>
             </a>
         </li>

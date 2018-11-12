@@ -99,18 +99,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.garylee.tmall_springboot.domain.OrderItem">
-    insert into orderitem (id, pid, oid, 
-      uid, number)
-    values (#{id,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, #{oid,jdbcType=INTEGER}, 
-      #{uid,jdbcType=INTEGER}, #{number,jdbcType=INTEGER})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.OrderItem" useGeneratedKeys="true">
+    insert into orderitem (pid, oid, uid, 
+      number)
+    values (#{pid,jdbcType=INTEGER}, #{oid,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, 
+      #{number,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.garylee.tmall_springboot.domain.OrderItem">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.OrderItem" useGeneratedKeys="true">
     insert into orderitem
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="pid != null">
         pid,
       </if>
@@ -125,9 +122,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="pid != null">
         #{pid,jdbcType=INTEGER},
       </if>

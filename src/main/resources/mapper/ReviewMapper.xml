@@ -99,18 +99,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.garylee.tmall_springboot.domain.Review">
-    insert into review (id, content, uid, 
-      pid, createDate)
-    values (#{id,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, 
-      #{pid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP})
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.Review" useGeneratedKeys="true">
+    insert into review (content, uid, pid, 
+      createDate)
+    values (#{content,jdbcType=VARCHAR}, #{uid,jdbcType=INTEGER}, #{pid,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.garylee.tmall_springboot.domain.Review">
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.garylee.tmall_springboot.domain.Review" useGeneratedKeys="true">
     insert into review
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="content != null">
         content,
       </if>
@@ -125,9 +122,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="content != null">
         #{content,jdbcType=VARCHAR},
       </if>

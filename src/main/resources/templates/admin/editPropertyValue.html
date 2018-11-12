@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>产品属性值编辑</title>
+    <script src="js/jquery/2.0.0/jquery.min.js"></script>
+    <link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap/3.3.6/bootstrap.min.js"></script>
+    <link href="css/back/style.css" rel="stylesheet">
+    <!--<script src="http://how2j.cn/study/vue.min.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://how2j.cn/study/axios.min.js"></script>
+</head>
+<script>
+    $(function() {
+        $('.adminHeader').load("adminHeader");
+        $('.adminNavigator').load("adminNavigator");
+    });
+</script>
+<body>
+<div class="adminHeader"></div>
+<div class="adminNavigator"></div>
+<!--此处会报错：Cannot read property 'id' of undefined(但不会影响数据)-->
+<div class="workingArea" id="demo">
+    <ol class="breadcrumb">
+        <li><a href="admin_category_list">所有分类</a></li>
+        <li><a :href="['admin_product_list?cid='+product.category.id]">{{product.category.name}}</a></li>
+        <li class="active">{{product.name}}</li>
+        <li class="active">编辑产品属性</li>
+    </ol>
+    <div class="editPVDiv">
+
+            <div class="eachPV" v-for="pv in propertyValue">
+                <span class="pvName" >{{pv.property.name}}</span>
+                <span class="pvValue"><input class="pvValue" :pvid="[pv.id]" type="text" :value="[pv.value]"></span>
+                <!--<span class="pvValue"><input pvid="769" type="text" class="pvValue" value="666"></span>-->
+            </div>
+        <div style="clear:both"></div>
+    </div>
+
+</div>
+</body>
+<script>
+    new Vue({
+        el:"#demo",
+        data:{
+            product:[],
+            propertyValue:[]
+        },
+        mounted:function () {
+            var self = this;
+            axios.get("getProduct?id="+GetQueryString("pid")).then(function (response) {
+                self.product = response.data;
+            });
+            axios.get("listPropertyValue?pid="+GetQueryString("pid")).then(function (response) {
+                self.propertyValue = response.data;
+                $(function () {
+                    $("input.pvValue").keyup(function () {
+                        console.log("实时更新完成!");
+                        var value = $(this).val();
+                        var page = "admin_propertyValue_update";
+                        var pvid = $(this).attr("pvid");
+                        var parentSpan = $(this).parent("span");
+                        parentSpan.css("border", "1px solid yellow");
+                        $.post(
+                            page,
+                            {"value": value, "id": pvid},
+                            function (result) {
+                                if ("success" == result)
+                                    parentSpan.css("border", "1px solid green");
+                                else
+                                    parentSpan.css("border", "1px solid red");
+                            }
+                        );
+                    });
+                });
+            });
+        }
+    });
+    function GetQueryString(name) {//获取url中key为name的value
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+</script>
+</html>

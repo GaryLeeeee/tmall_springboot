@@ -8,6 +8,7 @@ import java.util.Properties;
 //mybatis的分页插件
 @Configuration
 public class PageHelperConfig {
+    // TODO: 2018/7/2 分页跳转指定某一页
     @Bean
     public PageHelper pageHelper(){
         PageHelper pageHelper = new PageHelper();

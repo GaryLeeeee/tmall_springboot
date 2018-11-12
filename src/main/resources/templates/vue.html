@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!--   <script src="vue.min.js"></script>-->
+    <!--    <script src="https://cdn.bootcss.com/vue/2.5.17-beta.0/vue.min.js"></script>-->
+</head>
+
+<body>
+<div id="gary">
+    <p>{{message}}</p>
+    <div v-html="message"></div>
+    <p>{{5+5}}</p>
+    <p>{{pd?"true":"false"}}</p>
+    {{text.split}}
+</div>
+</body>
+<script>
+    new Vue({
+        el: '#gary',
+        data: {
+            message: "test",
+            pd:true,
+            text:"GaryLeeee"
+        }
+
+    })
+</script>
+</html>

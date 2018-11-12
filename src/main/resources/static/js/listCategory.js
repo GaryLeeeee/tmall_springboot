@@ -4,17 +4,28 @@ function initCategory() {
         {start: GetQueryString("start") ? GetQueryString("start") : 1},
         function (data) {
             console.log(data);
-            $('#index').attr("href", "?start="+data["firstPage"]);//1
-            if (data["hasPreviousPage"] == true)
+            //如果有上一页则上一页及首页按钮可选
+            //有则赋超链href值,无则直接添加不可选class样式
+            if (data["hasPreviousPage"] == true) {
                 $('#previous').attr("href", "?start=" + (data["pageNum"] - 1));
-            else
+                $('#index').attr("href", "?start=" + data["firstPage"]);//1
+            }
+            else {
                 $('#previous').parent("li").addClass("disabled");
-            if (data["hasNextPage"] == true)
+                $('#index').parent("li").addClass("disabled");
+            }
+            //同理
+            if (data["hasNextPage"] == true) {
                 $('#next').attr("href", "?start=" + (data["pageNum"] + 1));
-            else
+                $('#last').attr("href", "?start=" + data["lastPage"]);
+            }
+            else {
                 $('#next').parent("li").addClass("disabled");
-            $('#last').attr("href", "?start=" + data["lastPage"]);
+                $('#last').parent("li").addClass("disabled");
+            }
+
             data = data["list"];
+            console.log("list:"+data);
             for (var i = 0; i < data.length; i++) {
                 // html = "<tr><td>" + data[i].id + "</td><td><img height='40px' src='img/category/" + data[i].id + ".jpg'></td><td>" + data[i].name + "</td>"
                 // 图片直接从云存储上加载

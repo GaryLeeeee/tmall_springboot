@@ -5,10 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class ViewController {
-    @RequestMapping("/index")
-    public String index(){
-        return "include/admin/adminNavigator";
-    }
     @RequestMapping("admin_category_list")
     public String list(){
         return "admin/listCategory";
@@ -32,5 +28,22 @@ public class ViewController {
     @RequestMapping("adminPage")
     public String adminPage(){
         return "include/admin/adminPage";
+    }
+    //首页跳转(即不需要uri)
+    @RequestMapping("")
+    public String index(){
+        return "admin/listCategory";
+    }
+    @RequestMapping("404")
+    public String error(){
+        return "index";
+    }
+    @RequestMapping("vue")
+    public String vue(){
+        return "vue";
+    }
+    @RequestMapping("vueCategory")
+    public String v(){
+        return "admin/vueCategory";
     }
 }

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>后台-分类管理</title>
+    <script src="js/jquery/2.0.0/jquery.min.js"></script>
+    <!--<script src="js/listCategory.js"></script>-->
+    <link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap/3.3.6/bootstrap.min.js"></script>
+    <link href="css/back/style.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="http://how2j.cn/study/axios.min.js"></script>
+</head>
+<script>
+    $(function () {
+        $('.adminHeader').load("adminHeader");
+        $('.adminNavigator').load("adminNavigator");
+        $('.adminFooter').load("adminFooter");
+        $("#addForm").submit(function () {
+            if (!checkEmpty("name", "分类名称"))
+                return false;
+            if (!checkEmpty("categoryPic", "分类图片"))
+                return false;
+            return true;
+        });
+//        该操作为取消a的点击事件(href),该项目为直接判断有无前后页才设置href，故可去掉
+//        $("ul.pagination li.disabled a").click(function () {
+//            return false;
+//        });
+    });
+//    initCategory();
+</script>
+<div>
+<div class="adminHeader"></div>
+<div class="adminNavigator"></div>
+<h1 class="label label-info">分类管理</h1>
+<br>
+<br>
+<div  id="demo">
+<div class="listDataTableDiv">
+    <table class="table table-striped table-bordered table-hover  table-condensed">
+        <thead>
+        <tr class="success">
+            <th>ID</th>
+            <th>图片</th>
+            <th>分类名称</th>
+            <th>属性管理</th>
+            <th>产品管理</th>
+            <th>编辑</th>
+            <th>删除</th>
+        </tr>
+        </thead>
+        <tbody id="t">
+            <tr v-for="c in page.list">
+                <td>{{c.id}}</td>
+                <!--<td><img height="40px" src="'http://p8iu5y6va.bkt.clouddn.com/'+{{c.id}}+'.jpg'"></td>-->
+                <td><img height="40px" :src="['http://p8iu5y6va.bkt.clouddn.com/'+c.id+'.jpg']"></td>
+                <!--<td><img height="40px" src="http://p8iu5y6va.bkt.clouddn.com/81.jpg"></td>-->
+                <td>{{c.name}}</td>
+
+                <td><a :href="['admin_property_list?cid='+c.id]"><span class="glyphicon glyphicon-th-list"></span></a></td>
+                <td><a :href="['admin_product_list?cid='+c.id]"><span class="glyphicon glyphicon-shopping-cart"></span></a></td>
+                <td><a :href="['admin_category_edit?id='+c.id]"><span class="glyphicon glyphicon-edit"></span></a></td>
+                <td><a deleteLink="true" :href="['admin_category_delete?id='+c.id]"><span class="   glyphicon glyphicon-trash"></span></a></td>
+
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="pageDiv">
+    <nav class="">
+        <ul class="pagination">
+            <li>
+                <a aria-label="Previous" id="index">
+                    <span aria-hidden="true">«</span>
+                </a>
+            </li>
+            <li>
+                <a aria-label="Previous" id="previous">
+                    <span aria-hidden="true">‹</span>
+                </a>
+            </li>
+
+            <!--<c:forEach begin="0" end="${page.totalPage-1}" varStatus="status">-->
+                <!--<li <c:if test="${status.index*page.count==page.start}">class="disabled"</c:if>>-->
+                <!--<a-->
+                        <!--href="?start=${status.index*page.count}${page.param}"-->
+                <!--<c:if test="${status.index*page.count==page.start}">class="current"</c:if>-->
+                <!--&gt;${status.count}</a>-->
+                <!--</li>-->
+            <!--</c:forEach>-->
+            <!--使用vue的for循环实现有多少页并列出-->
+            <li v-for="index in page.pages">
+                <a href="#" @click="goTo">{{index}}</a>
+            </li>
+
+
+            <li>
+                <a aria-label="Next" id="next">
+                    <span aria-hidden="true">›</span>
+                </a>
+            </li>
+            <li>
+                <a aria-label="Next" id="last">
+                    <span aria-hidden="true">»</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="panel panel-warning addDiv">
+    <div class="panel-heading">新增分类</div>
+    <div class="panel-body">
+        <form method="post" id="addForm" action="admin_category_add" enctype="multipart/form-data">
+            <table class="addTable">
+                <tr>
+                    <td>分类名称</td>
+                    <td><input id="name" name="name" type="text" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td>分类圖片</td>
+                    <td>
+                        <input id="categoryPic" accept="image/*" type="file" name="image"/>
+                    </td>
+                </tr>
+                <tr class="submitTR">
+                    <td colspan="2" align="center">
+                        <button type="submit" class="btn btn-success">提 交</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+</div>
+
+<div class="adminFooter"></div>
+</div>
+<script>
+    function GetQueryString(name) {//获取url中key为name的value
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    new Vue({
+        el:"#demo",
+        data:{
+//            category:[],
+            page:[]
+        },
+        mounted:function () {
+            var self = this;
+//            axios.get("listCategory?start=1").then(function (response) {
+//                self.category = response.data.list;
+//                self.page = response.data;
+//                console.log(response.data);
+//            })
+            $.get(
+                "listCategory",
+                function (data) {
+                    self.page = data;
+                }
+            )
+
+        },
+        methods:{
+            goTo:function (event) {
+//                获取当前标签的文本值
+                var text = event.target.innerHTML;
+                console.log("点击事件:"+text);
+                var self = this;
+                $.get(
+                    "listCategory",
+                    {start: text},
+                    function (data) {
+                        self.page = data;
+                    }
+                );
+            }
+        }
+    });
+</script>
+</body>
+</html>

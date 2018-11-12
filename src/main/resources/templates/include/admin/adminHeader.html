@@ -47,10 +47,11 @@
 
         return true;
     }
+    //判断是否为删除操作
     $(function(){
         $("a").click(function(){
             var deleteLink = $(this).attr("deleteLink");
-            console.log(deleteLink);
+//            console.log(deleteLink);
             if("true"==deleteLink){
                 var confirmDelete = confirm("确认要删除");
                 if(confirmDelete)

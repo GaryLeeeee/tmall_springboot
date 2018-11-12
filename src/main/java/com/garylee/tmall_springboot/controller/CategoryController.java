@@ -41,6 +41,7 @@ public class CategoryController {
     @RequestMapping("admin_category_add")
     public String add(Category category, @RequestParam("image") MultipartFile multipartFile) throws IOException {
         //添加到数据库
+        //注意需要添加数据库后将id设置到对象上去
         categoryService.add(category);
         //保存本地、上传文件
         categoryService.up(multipartFile,category);
@@ -51,7 +52,7 @@ public class CategoryController {
     public String delete(int id){
         categoryService.delete(id);
         //删除七牛空间中的文件
-        fileUp.delete(id+".jpg");
+        fileUp.delete(id+".jpg","category");
         //删除本地文件
         File imageFolder= new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\category");
         File file = new File(imageFolder,id+".jpg");
@@ -60,7 +61,7 @@ public class CategoryController {
     }
     @RequestMapping("getCategory")
     @ResponseBody
-    public Category get(int id){
+    public Category get(@RequestParam("id")int id){
         return categoryService.get(id);
     }
     //更新已有分类
