@@ -29,7 +29,8 @@ function initCategory() {
             for (var i = 0; i < data.length; i++) {
                 // html = "<tr><td>" + data[i].id + "</td><td><img height='40px' src='img/category/" + data[i].id + ".jpg'></td><td>" + data[i].name + "</td>"
                 // 图片直接从云存储上加载
-                html = "<tr><td>" + data[i].id + "</td><td><img height='40px' src='http://p8iu5y6va.bkt.clouddn.com/" + data[i].id + ".jpg'></td><td>" + data[i].name + "</td>"
+                // html = "<tr><td>" + data[i].id + "</td><td><img height='40px' src='http://p8iu5y6va.bkt.clouddn.com/" + data[i].id + ".jpg'></td><td>" + data[i].name + "</td>"
+                html = "<tr><td>" + data[i].id + "</td><td><img height='40px' src='img/category/" + data[i].id + ".jpg'></td><td>" + data[i].name + "</td>"
                     + "<td><a href='admin_property_list?cid=" + data[i].id + "'><span class='glyphicon glyphicon-th-list'></span></a></td>"
                     + "<td><a href='admin_product_list?cid=" + data[i].id + "'><span class='glyphicon glyphicon-shopping-cart'></span></a></td>"
                     + "<td><a href='admin_category_edit?id=" + data[i].id + "'><span class='glyphicon glyphicon-edit'></span></a></td>"

@@ -1,7 +1,13 @@
 package com.garylee.tmall_springboot.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 @Controller
 public class ViewController {
@@ -29,9 +35,9 @@ public class ViewController {
     public String adminPage(){
         return "include/admin/adminPage";
     }
-    //首页跳转(即不需要uri)
+    //后台跳转(即不需要uri)
     @RequestMapping("")
-    public String index(){
+    public String admin(){
         return "admin/listCategory";
     }
     @RequestMapping("404")
@@ -45,5 +51,17 @@ public class ViewController {
     @RequestMapping("vueCategory")
     public String v(){
         return "admin/vueCategory";
+    }
+    //前台跳转
+    @RequestMapping("index")
+    public String index(HttpSession session, HttpServletRequest request){
+        try {
+            System.out.println(ResourceUtils.getFile("classpath:").getPath());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.err.println("路径1为:"+session.getServletContext().getRealPath("img/category"));
+        System.err.println("路径2为:"+request.getServletContext().getRealPath("img/category"));
+        return "fore/home";
     }
 }

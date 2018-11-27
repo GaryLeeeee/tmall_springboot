@@ -2,7 +2,7 @@ body{
    padding-top:70px;
 }
 
-div.workingArea{
+div#workingArea{
 	margin:0px 40px;
 }
 
@@ -60,11 +60,13 @@ div.eachPV{
 span.pvValue{
 	display:inline-block;
 	width:200px;
-	border:1px solid lightgray;	
 	padding:0px;
 }
+
+
 span.pvValue input{
-	border-width:0px;
+	outline: none;
+	border:2px solid lightGray;
 }
 div.addPictureDiv{
 	width:400px;
@@ -97,3 +99,9 @@ td{
 th{
 	font-size:14px;
 }
+.disableHref{
+	cursor:default;
+	color:#E5E0E0;
+	text-decoration:none;        
+}
+        

@@ -51,12 +51,26 @@ public class CategoryController {
     @RequestMapping("admin_category_delete")
     public String delete(int id){
         categoryService.delete(id);
+        /*
+        七牛云回收，暂时去掉
         //删除七牛空间中的文件
         fileUp.delete(id+".jpg","category");
+        */
         //删除本地文件
-        File imageFolder= new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\category");
-        File file = new File(imageFolder,id+".jpg");
-        file.delete();
+        try {
+            //classpaths下的
+            File imageFolder= new File("src\\main\\resources\\static\\img\\category");
+            //target下的(开发模式)
+            File imageFolderTarget= new File(ResourceUtils.getFile("classpath:").getPath()+"\\static\\img\\category");
+//            System.err.println(imageFolder.getAbsolutePath());
+//            System.err.println(imageFolderTarget.getAbsolutePath());
+            File file = new File(imageFolder,id+".jpg");
+            File file2 = new File(imageFolderTarget,id+".jpg");
+            file.delete();
+            file2.delete();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         return "redirect:/admin_category_list";
     }
     @RequestMapping("getCategory")

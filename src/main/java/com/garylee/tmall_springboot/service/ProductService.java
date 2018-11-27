@@ -1,5 +1,6 @@
 package com.garylee.tmall_springboot.service;
 
+import com.garylee.tmall_springboot.domain.Category;
 import com.garylee.tmall_springboot.domain.Product;
 
 import java.util.List;
@@ -10,4 +11,8 @@ public interface ProductService {
     void update(Product product);
     Product get(int id);
     List<Product> list(int cid);
+
+    void fill(List<Category> categories);
+    void fill(Category category);
+    void fillByRow(List<Category> categories);
 }

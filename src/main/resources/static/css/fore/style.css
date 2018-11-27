@@ -461,7 +461,7 @@ div.loginErrorMessageDiv {
 	width: 300px;
 	position: absolute;
 	top: 20px;
-	display: none;
+	visibility: hidden;
 }
 
 div.loginErrorMessageDiv div.alert {
@@ -937,6 +937,7 @@ div.productDetailDiv {
 div.productReviewDiv {
 	width: 790px;
 	margin: 40px auto;
+/* 	display:none; */
 }
 
 div.productReviewContentPart {
@@ -1069,9 +1070,6 @@ span.userInfoGrayPart {
 	color: #999999;
 }
 
-div.productReviewDiv {
-	display: none;
-}
 
 div.buyPageDiv {
 	margin: 20px auto;
@@ -2293,3 +2291,7 @@ table.cartProductTable th.selectAndImage{
 table td{
 	font-size:12px;
 }
+input{
+	outline: none;
+}
+

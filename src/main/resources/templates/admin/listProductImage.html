@@ -89,8 +89,8 @@
                                 <td>{{pi.id}}</td>
                                 <td>
                                     <!--<a title="点击查看原图" href="img/productSingle/${pi.id}.jpg"><img height="50px" src="img/productSingle/${pi.id}.jpg"></a>-->
-                                    <!--<a title="点击查看原图" href="img/productSingle/${pi.id}.jpg"><img height="50px" src="img/productSingle/${pi.id}.jpg"></a>-->
-                                    <a title="点击查看原图" :href="['http://pby7xa10a.bkt.clouddn.com/'+pi.id+'.jpg']"><img height="50px" :src="['http://pby7xa10a.bkt.clouddn.com/'+pi.id+'.jpg']"></a>
+                                    <a title="点击查看原图" :href="['img/productSingle/'+pi.id+'.jpg']"><img height="50px" :src="['img/productSingle/'+pi.id+'.jpg']"></a>
+                                    <!--<a title="点击查看原图" :href="['http://pby7xa10a.bkt.clouddn.com/'+pi.id+'.jpg']"><img height="50px" :src="['http://pby7xa10a.bkt.clouddn.com/'+pi.id+'.jpg']"></a>-->
                                 </td>
                                 <!--<td><a deleteLink="true"-->
                                        <!--href="'admin_productImage_delete?id='+{{pi.id}}"><span-->
@@ -145,7 +145,8 @@
                                 <td>{{pi.id}}</td>
                                 <td>
                                     <!--<a title="点击查看原图" href="img/productDetail/${pi.id}.jpg"><img height="50px" src="img/productDetail/${pi.id}.jpg"></a>-->
-                                    <a title="点击查看原图" :href="['http://pby7rjo97.bkt.clouddn.com/'+pi.id+'.jpg']"><img height="50px" :src="['http://pby7rjo97.bkt.clouddn.com/'+pi.id+'.jpg']"></a>
+                                    <a title="点击查看原图" :href="['img/productDetail/'+pi.id+'.jpg']"><img height="50px" :src="['img/productDetail/'+pi.id+'.jpg']"></a>
+                                    <!--<a title="点击查看原图" :href="['http://pby7rjo97.bkt.clouddn.com/'+pi.id+'.jpg']"><img height="50px" :src="['http://pby7rjo97.bkt.clouddn.com/'+pi.id+'.jpg']"></a>-->
                                 </td>
                                 <td><a deleteLink="true" :href="['admin_productImage_delete?id='+pi.id]"><span
                                         class="glyphicon glyphicon-trash"></span></a></td>

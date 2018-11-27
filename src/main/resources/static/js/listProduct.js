@@ -30,7 +30,7 @@ function initProduct(){
                 // html = "<tr><td>" + data[i].id + "</td><td><img height='40px' src='img/category/" + data[i].id + ".jpg'></td><td>" + data[i].name + "</td>"
                 // 图片直接从云存储上加载
                 html = "<tr><td>"+data[i].id+"</td>"
-                +"<td></td><td>"+data[i].name+"</td>"
+                +"<td><img height='40px' src='img/productSingle/" + data[i].firstProductImage.id +".jpg'></td><td>"+data[i].name+"</td>"
                 +"<td>"+data[i].subTitle+"</td>"
                 +"<td>"+data[i].originalPrice+"</td>"
                 +"<td>"+data[i].promotePrice+"</td>"

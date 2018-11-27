@@ -4,6 +4,7 @@ import com.garylee.tmall_springboot.domain.ProductImage;
 import com.garylee.tmall_springboot.domain.Property;
 import com.garylee.tmall_springboot.service.ProductImageService;
 import com.garylee.tmall_springboot.util.FileUp;
+import com.garylee.tmall_springboot.util.StaticConfig;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class ProductImageController {
         //file
 
         if(ProductImageService.type_single.equals(productImage.getType())) {
+            /*
+            七牛回收，暂时去掉
             //删除七牛空间中的文件
             fileUp.delete(id + ".jpg", "product-single");
             System.out.println(id+".jpg"+"已删除!");
@@ -53,23 +56,38 @@ public class ProductImageController {
             System.out.println("small/"+id+".jpg"+"已删除!");
             fileUp.delete("middle/" + id + ".jpg", "product-single");
             System.out.println("middle/"+id+".jpg"+"已删除!");
+            */
             //删除本地文件
-            File imageFolder = new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\product-single");
-            File imageFolder_small = new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\product-single\\small");
-            File imageFolder_middle = new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\product-single\\middle");
-            File file = new File(imageFolder, id + ".jpg");
-            File file_small = new File(imageFolder_small, id + ".jpg");
-            File file_middle = new File(imageFolder_middle, id + ".jpg");
+            File imgFolder = new File(StaticConfig.root+"\\productSingle");
+            File imgFolderTarget = new File(StaticConfig.target+"\\productSingle");
+            File imgFolder_small = new File(StaticConfig.root+"\\productSingle_small");
+            File imgFolder_smallTarget = new File(StaticConfig.target+"\\productSingle_small");
+            File imgFolder_middle = new File(StaticConfig.root+"\\productSingle_middle");
+            File imgFolder_middleTarget = new File(StaticConfig.target+"\\productSingle_middle");
+            //root
+            File file = new File(imgFolder, id + ".jpg");
+            File file_small = new File(imgFolder_small, id + ".jpg");
+            File file_middle = new File(imgFolder_middle, id + ".jpg");
             file.delete();
             file_small.delete();
             file_middle.delete();
+            //target
+            File file2 = new File(imgFolderTarget, id + ".jpg");
+            File file_small2 = new File(imgFolder_smallTarget, id + ".jpg");
+            File file_middle2 = new File(imgFolder_middleTarget, id + ".jpg");
+            file2.delete();
+            file_small2.delete();
+            file_middle2.delete();
         }else if(ProductImageService.type_detail.equals(productImage.getType())){
-            File imageFolder = new File("d:\\Users\\Administrator\\Desktop\\tmall_image\\product-detail");
-            //删除七牛空间中的文件
-            fileUp.delete(id + ".jpg", "product-detail");
+            File imgFolder = new File(StaticConfig.root+"\\productDetail");
+            File imgFolderTarget = new File(StaticConfig.target+"\\productDetail");
+            //删除七牛空间中的文件,暂时去掉
+//            fileUp.delete(id + ".jpg", "product-detail");
             //删除本地文件
-            File file = new File(imageFolder,id+".jpg");
+            File file = new File(imgFolder,id+".jpg");
             file.delete();
+            File file2 = new File(imgFolderTarget,id+".jpg");
+            file2.delete();
         }
 
         productImageService.delete(id);

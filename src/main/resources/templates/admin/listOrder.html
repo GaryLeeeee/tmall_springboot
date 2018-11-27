@@ -76,7 +76,8 @@
                             <table width="800px" align="center" class="orderPageOrderItemTable">
                                     <tr v-for="oi in o.orderItems">
                                         <td align="left">
-                                            <img width="40px" height="40px" src="http://p8iu5y6va.bkt.clouddn.com/82.jpg">
+                                            <!--<img width="40px" height="40px" src="http://p8iu5y6va.bkt.clouddn.com/82.jpg">-->
+                                            <img width="40px" height="40px" :src="['img/productSingle/'+oi.product.firstProductImage.id+'.jpg']">
                                             <!---->
                                         </td>
 
