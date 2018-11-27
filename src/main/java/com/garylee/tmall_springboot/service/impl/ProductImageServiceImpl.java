@@ -82,12 +82,6 @@ public class ProductImageServiceImpl implements ProductImageService{
         String bucket = null;//定义当前为哪个类型图片
         //判断为single还是detail图片
         if(ProductImageService.type_single.equals(productImage.getType())){
-            System.out.println("root:"+StaticConfig.root);
-            System.out.println("target:"+StaticConfig.target);
-            System.out.println("r:"+ClassUtils.getDefaultClassLoader().getResource("").getPath().substring(1)+"static/img");
-            System.out.println("t:"+new File("src\\main\\resources\\static\\img").getAbsolutePath());
-
-            // TODO: 2018/11/27 0027 做到这里（准备用全局设置来获取路径)
             imgFolder = new File(StaticConfig.root+"\\productSingle");
             imgFolderTarget = new File(StaticConfig.target+"\\productSingle");
             imgFolder_small = new File(StaticConfig.root+"\\productSingle_small");

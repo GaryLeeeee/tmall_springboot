@@ -60,8 +60,6 @@ public class ViewController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        System.err.println("路径1为:"+session.getServletContext().getRealPath("img/category"));
-        System.err.println("路径2为:"+request.getServletContext().getRealPath("img/category"));
         return "fore/home";
     }
 }
