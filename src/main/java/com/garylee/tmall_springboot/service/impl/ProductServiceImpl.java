@@ -2,12 +2,15 @@ package com.garylee.tmall_springboot.service.impl;
 
 import com.garylee.tmall_springboot.dao.CategoryMapper;
 import com.garylee.tmall_springboot.dao.ProductMapper;
+import com.garylee.tmall_springboot.dao.ReviewMapper;
 import com.garylee.tmall_springboot.domain.Category;
 import com.garylee.tmall_springboot.domain.Product;
 import com.garylee.tmall_springboot.domain.ProductExample;
 import com.garylee.tmall_springboot.domain.ProductImage;
+import com.garylee.tmall_springboot.service.OrderItemService;
 import com.garylee.tmall_springboot.service.ProductImageService;
 import com.garylee.tmall_springboot.service.ProductService;
+import com.garylee.tmall_springboot.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +29,10 @@ public class ProductServiceImpl implements ProductService{
     CategoryMapper categoryMapper;
     @Autowired
     ProductImageService productImageService;
+    @Autowired
+    OrderItemService orderItemService;
+    @Autowired
+    ReviewService reviewService;
     @Override
     public void add(Product product) {
         productMapper.insert(product);
@@ -87,6 +94,22 @@ public class ProductServiceImpl implements ProductService{
             }
             category.setProductsByRow(productsByRow);
         }
+    }
+
+    @Override
+    public void setSaleAndReviewNumber(Product product) {
+        //根据订单项求出销量
+        int saleCount = orderItemService.getSaleCount(product.getId());
+        product.setSaleCount(saleCount);
+        //根据评论条数求出评论数
+        int reviewCount = reviewService.getCount(product.getId());
+        product.setReviewCount(reviewCount);
+    }
+
+    @Override
+    public void setSaleAndReviewNumber(List<Product> products) {
+        for(Product product:products)
+            setSaleAndReviewNumber(product);
     }
 
     public void setCategory(Product product){

@@ -15,4 +15,7 @@ public interface ProductService {
     void fill(List<Category> categories);
     void fill(Category category);
     void fillByRow(List<Category> categories);
+    //设置销量和评价数量
+    void setSaleAndReviewNumber(Product product);
+    void setSaleAndReviewNumber(List<Product> products);
 }

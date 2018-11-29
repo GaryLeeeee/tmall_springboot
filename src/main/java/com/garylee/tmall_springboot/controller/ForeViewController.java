@@ -3,6 +3,8 @@ package com.garylee.tmall_springboot.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * Created by GaryLee on 2018-11-29 00:40.
  * 前台页面跳转
@@ -74,7 +76,9 @@ public class ForeViewController {
         return "fore/search";
     }
     @GetMapping("/forelogout")
-    public String logout( ) {
+    public String logout(HttpSession session) {
+        //退出登录，session移除user对象
+        session.removeAttribute("user");
         return "redirect:home";
     }
 

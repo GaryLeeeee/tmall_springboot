@@ -1,5 +1,6 @@
 package com.garylee.tmall_springboot.service.impl;
 
+import com.garylee.tmall_springboot.domain.User;
 import com.garylee.tmall_springboot.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,13 @@ public class UserServiceImplTest {
     public void isExist() throws Exception {
         System.out.println(userService.isExist("测试用户1"));
         System.out.println(userService.isExist("测试用户8"));
+    }
+    @Test
+    public void getUser() throws Exception {
+        User user = userService.getUser("测试用户1","password1");
+        System.out.println(null!=user);
+        User user2 = userService.getUser("1234","123");
+        System.out.println(null!=user2);
     }
 
 }

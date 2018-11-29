@@ -7,6 +7,14 @@ public class User {
 
     private String password;
 
+    //非数据库字段
+
+    private String anonymousName;
+
+    public void setAnonymousName(String anonymousName) {
+        this.anonymousName = anonymousName;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -29,5 +37,30 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
+    }
+    //用于产品页显示评价者的时候匿名显示
+    //abc->a*c
+    //ab ->a*
+    //a  ->a
+    public String getAnonymousName(){
+        if(null==name)
+            return null;
+        if(name.length()<=1)
+            return "*";
+
+        if(name.length()==2)
+            return name.substring(0,1) +"*";
+
+        char[] cs =name.toCharArray();
+        for (int i = 1; i < cs.length-1; i++) {
+            cs[i]='*';
+        }
+        return new String(cs);
+    }
+
+    public static void main(String[] args) {
+        User user = new User();
+        user.setName("adf");
+        System.out.println(user.getAnonymousName());
     }
 }
