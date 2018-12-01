@@ -1,5 +1,6 @@
 package com.garylee.tmall_springboot.controller;
 
+import com.garylee.tmall_springboot.comparator.*;
 import com.garylee.tmall_springboot.domain.*;
 import com.garylee.tmall_springboot.service.*;
 import com.garylee.tmall_springboot.util.Result;
@@ -9,9 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by GaryLee on 2018-11-13 09:00.
@@ -93,5 +92,43 @@ public class ForeController {
         map.put("pvs",pvs);
         map.put("reviews",reviews);
         return Result.success(map);
+    }
+    @GetMapping("forecheckLogin")
+    public Object checkLogin(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(null!=user)
+            return Result.success();
+        return Result.fail("用户未登录");
+    }
+    @GetMapping("forecategory/{cid}")
+    public Object foreCategory(@PathVariable("cid")int cid,String sort){
+        Category category = categoryService.get(cid);
+        //使category对象添加product属性
+        productService.fill(category);
+        //设置产品销量及评价
+        productService.setSaleAndReviewNumber(category.getProducts());
+        //通过比较器对已查询的products进行排序
+        //好处在于不用多次查询数据库
+        //如需多次查询数据库，可每次都order by查询后返回结果
+        if(null!=sort){
+            switch (sort){
+                case "all":
+                    Collections.sort(category.getProducts(), new ProductAllComparator());
+                    break;
+                case "date":
+                    Collections.sort(category.getProducts(),new ProductDateComparator());
+                    break;
+                case "price":
+                    Collections.sort(category.getProducts(),new ProductPriceComparator());
+                    break;
+                case "review":
+                    Collections.sort(category.getProducts(),new ProductReviewComparator());
+                    break;
+                case "saleCount":
+                    Collections.sort(category.getProducts(),new ProductSaleCountComparator());
+                    break;
+            }
+        }
+        return category;
     }
 }
