@@ -4,6 +4,7 @@ import com.garylee.tmall_springboot.comparator.*;
 import com.garylee.tmall_springboot.domain.*;
 import com.garylee.tmall_springboot.service.*;
 import com.garylee.tmall_springboot.util.Result;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,8 @@ public class ForeController {
     PropertyValueService propertyValueService;
     @Autowired
     ReviewService reviewService;
+    @Autowired
+    OrderItemService orderItemService;
     @RequestMapping("forehome")
     public List<Category> forehome(){
         List<Category> categories = categoryService.listAll();
@@ -130,5 +133,93 @@ public class ForeController {
             }
         }
         return category;
+    }
+    @PostMapping("foresearch")
+    public Object search(String keyword){
+        List<Product> products = productService.search(keyword);
+        return products;
+    }
+    @GetMapping("forebuyone")
+    /**
+     * @description："立即购买"按钮，将产品信息和用户信息存放到orderItem中存入数据库
+     * @pid: 产品id
+     * @num：产品数量
+     * @session：用来确定当前登陆的用户
+     * @return:ooid
+     * @Date: 2018/12/02 10:25
+    */
+    public Object buyone(int pid,int num,HttpSession session){
+        return buyoneAndCart(pid,num,session);
+    }
+    @GetMapping("forebuy")
+    //自己写的方法，不一定无bug
+    //判断如果有id则为购买某一产品，如果无则为查看该用户下购物车
+    public Object buy(int oiid,HttpSession session){
+        float total = 0;
+        List<OrderItem> orderItems = new ArrayList<>();
+        //如果没登录，则返回错误给前端处理跳转
+        User user = (User) session.getAttribute("user");
+
+        if(null==user)
+            return Result.fail("没有用户登陆信息!");
+        //判断如果orderitem的id与uid是否匹配
+        if(orderItemService.get(oiid).getUid()!=user.getId())
+            return Result.fail("该用户查无此订单!");
+
+        //如果有ooid,即某个产品"立即购买"
+            OrderItem orderItem = orderItemService.get(oiid);
+            //总价
+            total += orderItem.getProduct().getPromotePrice()*orderItem.getNumber();
+            orderItems.add(orderItem);
+
+
+        session.setAttribute("ois",orderItems);
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("total",total);
+        map.put("orderItems",orderItems);
+        return Result.success(map);
+    }
+    private int buyoneAndCart(int pid,int num,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        //判断该用户是否已将该产品加到订单项(购物车)
+        List<OrderItem> orderItems = orderItemService.listByUser(user.getId());
+        //判断是否有已存在uid+oiid的订单项
+        boolean exist = false;
+        //存放orderItem的id并作为return结果
+        int oiid = -1;
+        for(OrderItem orderItem:orderItems){
+            if(pid==orderItem.getPid()){
+                orderItem.setNumber(orderItem.getNumber()+num);
+                orderItemService.update(orderItem);
+                exist = true;
+                oiid = orderItem.getId();
+                break;
+            }
+
+        }
+        //如果无此记录，则新添加一条orderItem
+        if(!exist){
+            OrderItem orderItem = new OrderItem();
+            orderItem.setUid(user.getId());
+            orderItem.setPid(pid);
+            orderItem.setNumber(num);
+            orderItemService.add(orderItem);
+            //必须放入数据库后才有id
+            oiid = orderItem.getId();
+        }
+        return oiid;
+    }
+    @GetMapping("foreaddCart")
+    public Object addCart(int pid,int num,HttpSession session){
+        //只是添加到购物车，不用跳转结算页面
+        buyoneAndCart(pid,num,session);
+        return Result.success();
+    }
+    @GetMapping("forecart")
+    public Object cart(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        List<OrderItem> orderItems = orderItemService.listByUser(user.getId());
+        return orderItems;
     }
 }

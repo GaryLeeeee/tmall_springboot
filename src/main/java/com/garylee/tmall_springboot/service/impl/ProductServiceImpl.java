@@ -112,6 +112,20 @@ public class ProductServiceImpl implements ProductService{
             setSaleAndReviewNumber(product);
     }
 
+    @Override
+    public List<Product> search(String keyword) {
+        ProductExample example = new ProductExample();
+        //%表示任意个字符
+        example.createCriteria().andNameLike("%"+keyword+"%");
+        example.setOrderByClause("id desc");
+        List<Product> products = productMapper.selectByExample(example);
+        //设置第一张图
+        setFirstProductImage(products);
+        //设置销量和评价
+        setSaleAndReviewNumber(products);
+        return products;
+    }
+
     public void setCategory(Product product){
         Category category = categoryMapper.selectByPrimaryKey(product.getCid());
         product.setCategory(category);

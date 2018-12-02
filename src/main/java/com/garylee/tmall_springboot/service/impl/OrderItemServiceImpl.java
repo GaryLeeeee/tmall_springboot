@@ -94,6 +94,16 @@ public class OrderItemServiceImpl implements OrderItemService{
         return saleCount;
     }
 
+    @Override
+    public List<OrderItem> listByUser(int uid) {
+        OrderItemExample example = new OrderItemExample();
+        //购物车的订单项,还没生成订单,所以oid为null
+        example.createCriteria().andUidEqualTo(uid).andOidIsNull();
+        List<OrderItem> orderItems = orderItemMapper.selectByExample(example);
+        setProduct(orderItems);
+        return orderItems;
+    }
+
     public void setProduct(OrderItem orderItem){
         Product product = productService.get(orderItem.getPid());
         orderItem.setProduct(product);

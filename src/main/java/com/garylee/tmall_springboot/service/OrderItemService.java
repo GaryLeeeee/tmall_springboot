@@ -19,4 +19,6 @@ public interface OrderItemService {
     void fill(List<Order> orders);
     //根据产品获取销售量
     int getSaleCount(int pid);
+    //查询user购物车的订单项(用于判断用户的订单项有某个产品，有的话购买则在原有订单项上update，否则新建）
+    List<OrderItem> listByUser(int uid);
 }
