@@ -4,13 +4,15 @@ import com.garylee.tmall_springboot.comparator.*;
 import com.garylee.tmall_springboot.domain.*;
 import com.garylee.tmall_springboot.service.*;
 import com.garylee.tmall_springboot.util.Result;
-import org.apache.ibatis.annotations.Param;
+import com.sun.org.apache.xpath.internal.operations.Or;
+import com.sun.xml.internal.bind.v2.TODO;
+import org.apache.commons.lang.math.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -32,6 +34,8 @@ public class ForeController {
     ReviewService reviewService;
     @Autowired
     OrderItemService orderItemService;
+    @Autowired
+    OrderService orderService;
     @RequestMapping("forehome")
     public List<Category> forehome(){
         List<Category> categories = categoryService.listAll();
@@ -153,26 +157,17 @@ public class ForeController {
     }
     @GetMapping("forebuy")
     //自己写的方法，不一定无bug
-    //判断如果有id则为购买某一产品，如果无则为查看该用户下购物车
-    public Object buy(int oiid,HttpSession session){
+    //立即购买的时候只有一个oiid，购物车多选传过去的事多个oiid，兼容
+    public Object buy(int[] oiid,HttpSession session){
         float total = 0;
         List<OrderItem> orderItems = new ArrayList<>();
-        //如果没登录，则返回错误给前端处理跳转
-        User user = (User) session.getAttribute("user");
 
-        if(null==user)
-            return Result.fail("没有用户登陆信息!");
-        //判断如果orderitem的id与uid是否匹配
-        if(orderItemService.get(oiid).getUid()!=user.getId())
-            return Result.fail("该用户查无此订单!");
-
-        //如果有ooid,即某个产品"立即购买"
-            OrderItem orderItem = orderItemService.get(oiid);
-            //总价
-            total += orderItem.getProduct().getPromotePrice()*orderItem.getNumber();
+        for(int id:oiid){
+            OrderItem orderItem = orderItemService.get(id);
+            total += orderItem.getNumber() * orderItem.getProduct().getPromotePrice();
             orderItems.add(orderItem);
-
-
+        }
+        //设置结算页面内的订单项
         session.setAttribute("ois",orderItems);
 
         Map<String,Object> map = new HashMap<>();
@@ -180,6 +175,7 @@ public class ForeController {
         map.put("orderItems",orderItems);
         return Result.success(map);
     }
+    //"立即购买"和"添加购物车"共同方法
     private int buyoneAndCart(int pid,int num,HttpSession session){
         User user = (User) session.getAttribute("user");
         //判断该用户是否已将该产品加到订单项(购物车)
@@ -221,5 +217,172 @@ public class ForeController {
         User user = (User) session.getAttribute("user");
         List<OrderItem> orderItems = orderItemService.listByUser(user.getId());
         return orderItems;
+    }
+    //修改购物车的产品数量
+    @GetMapping("forechangeOrderItem")
+    public Object changOrderItem(int pid,int num,HttpSession session){
+        User user = (User)session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录,不能修改订单数量!");
+        List<OrderItem> orderItems = orderItemService.listByUser(user.getId());
+        for(OrderItem orderItem:orderItems){
+            if(orderItem.getPid()==pid){
+                orderItem.setNumber(num);
+                orderItemService.update(orderItem);
+                break;
+            }
+        }
+        return Result.success();
+    }
+    //删除购物车的订单项
+    //前端只是暂时隐藏了该订单项并删除数据库,可通过删除数据库后重新遍历
+    @GetMapping("foredeleteOrderItem")
+    public Object deleteOrderItem(int oiid,HttpSession session){
+        User user = (User)session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录,不能删除订单!");
+//        orderItemService.delete(oiid);
+        for(OrderItem orderItem:orderItemService.listByUser(user.getId())){
+            if(orderItem.getId()==oiid) {
+                orderItemService.delete(oiid);
+                break;
+            }
+        }
+        return Result.success();
+    }
+    // TODO: 2018/12/4 0004 生成订单并没有删除库存
+    @PostMapping("forecreateOrder")
+    //前端vue有个order,直接传给后端处理
+    //order传过来时已有字段:address,post,receiver,moblie,userMessage
+    public Object createOrder(@RequestBody Order order,HttpSession session){
+        User user = (User)session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录,不能生成订单!");
+        //根据当前时间加上4位随机数生成订单号(如201804240905441389018)
+        String orderCode = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date()) + RandomUtils.nextInt(10000);
+        order.setOrderCode(orderCode);
+        //订单刚完成时,设置为未付款
+        order.setStatus(OrderService.waitPay);
+        order.setUid(user.getId());
+        order.setCreateDate(new Date());
+        //从session中获取订单项集合，在结算功能的buy，订单项集合被放到了session中
+        @SuppressWarnings("unchecked")
+        List<OrderItem> orderItems = (List<OrderItem>) session.getAttribute("ois");
+        //此前order未存到数据库,无id
+        float total = orderService.add(order,orderItems);
+
+        Map<String,Object> map = new HashMap<>();
+        //标记order的id方便付款...
+        map.put("oid",order.getId());
+        //用户在付款界面显示付款总额
+        map.put("total",total);
+
+        return Result.success(map);
+    }
+    //支付功能
+    // TODO: 2018/12/4 0004  该系统目前浏览器后退，继续点"确认支付"，将会覆盖原有order，并更新支付时间
+    @GetMapping("forepayed")
+    public Object payed(int oid){
+        Order order = orderService.get(oid);
+        //设置支付日期payDate
+        order.setPayDate(new Date());
+        //状态设置为待发货
+        order.setStatus(OrderService.waitDelivery);
+        //更新order信息
+        orderService.update(order);
+
+        return order;
+    }
+    @GetMapping("forebought")
+    public Object bought(HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录,不能进行查看订单操作!");
+        List<Order> orders = orderService.listByUserWithoutDelete(user);
+
+        return orders;
+    }
+    //"付款"功能
+    @GetMapping("foreconfirmPay")
+    public Object confirmPay(int oid,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录,无法获取订单信息!");
+        Order order = orderService.get(oid);
+        order.setStatus(OrderService.waitReview);
+        orderItemService.fill(order);
+        return order;
+    }
+    //"确认收货"功能
+    @GetMapping("foreorderConfirmed")
+    public Object confirmed(int oid,HttpSession session){
+        User user = (User) session.getAttribute("user");
+        if(user==null)
+            return Result.fail("未登录,不能确认收获!");
+        Order order = orderService.get(oid);
+        order.setStatus(OrderService.waitReview);
+        order.setConfirmDate(new Date());
+        orderService.update(order);
+
+        return Result.success();
+    }
+    //put是什么鬼
+    @PutMapping("foredeleteOrder")
+    public Object deleteOrder(int oid){
+        //已经添加拦截器,所以可以不用进行user的null判断
+        Order order = orderService.get(oid);
+        order.setStatus(OrderService.delete);
+        orderService.update(order);
+        return Result.success();
+    }
+    @GetMapping("forereview")
+    public Object review(int oid){
+        Order order = orderService.get(oid);
+        orderItemService.fill(order);
+        List<OrderItem> orderItems = order.getOrderItems();
+        
+        //获取订单的第一个产品
+        // TODO: 2018/12/4 0004 目前包含多个产品的订单，也只可以评价第一个产品
+        Product product = orderItems.get(0).getProduct();
+        //设置销量和评价
+        productService.setSaleAndReviewNumber(product);
+
+        //获取该产品的所有评价
+        List<Review> reviews = reviewService.list(product.getId());
+        
+        Map<String,Object> map = new HashMap<>();
+        map.put("o",order);
+        map.put("p",product);
+        map.put("reviews",reviews);
+
+        return Result.success(map);
+    }
+
+    // TODO: 2018/12/4 0004 该页刷新后可以继续评价，并可以继续add一个新的review
+    @PostMapping("foredoreview")
+    public Object doreview(int oid,String content,int pid,HttpSession session){
+        //更新订单信息"waitReview"->"finish"
+        Order order = orderService.get(oid);
+        //解决一个todo!
+        //不判断为"finish"，是防止有其他状态的订单进入
+        if(!order.getStatus().equals(OrderService.waitReview))
+            return Result.fail("用户已经评价过此订单(或为无效订单)!");
+        order.setStatus(OrderService.finish);
+        orderService.update(order);
+
+        //添加review表数据
+        Review review = new Review();
+        review.setPid(pid);
+        content = HtmlUtils.htmlEscape(content);
+        review.setContent(content);
+        review.setCreateDate(new Date());
+
+        //设置用户
+//        review.setUid(order.getUid());
+        User user = (User) session.getAttribute("user");
+        review.setUid(user.getId());
+        reviewService.add(review);
+
+        return Result.success();
     }
 }

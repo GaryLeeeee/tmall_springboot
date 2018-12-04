@@ -28,6 +28,7 @@ public class LoginInterceptor implements HandlerInterceptor{
                 "alipay",
                 "payed",
                 "bought",
+                "review",//新增
 
                 "forebuyone",
                 "forebuy",

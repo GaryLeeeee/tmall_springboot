@@ -7,6 +7,7 @@ import com.garylee.tmall_springboot.domain.OrderItemExample;
 import com.garylee.tmall_springboot.domain.Product;
 import com.garylee.tmall_springboot.service.OrderItemService;
 import com.garylee.tmall_springboot.service.ProductService;
+import com.garylee.tmall_springboot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class OrderItemServiceImpl implements OrderItemService{
     OrderItemMapper orderItemMapper;
     @Autowired
     ProductService productService;
+    @Autowired
+    UserService userService;
     @Override
     public void add(OrderItem orderItem) {
         orderItemMapper.insert(orderItem);
@@ -74,6 +77,9 @@ public class OrderItemServiceImpl implements OrderItemService{
         order.setTotal(total);
         order.setTotalNumber(totalNumber);
         order.setOrderItems(orderItems);
+
+        //设置用户
+        order.setUser(userService.get(order.getUid()));
     }
 
     @Override
