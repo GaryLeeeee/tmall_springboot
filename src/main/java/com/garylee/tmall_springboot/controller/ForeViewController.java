@@ -1,5 +1,7 @@
 package com.garylee.tmall_springboot.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -77,8 +79,13 @@ public class ForeViewController {
     }
     @GetMapping("/forelogout")
     public String logout(HttpSession session) {
-        //退出登录，session移除user对象
-        session.removeAttribute("user");
+        Subject subject = SecurityUtils.getSubject();
+        //shiro判断
+        if(subject.isAuthenticated())
+            subject.logout();
+
+//        //退出登录，session移除user对象
+//        session.removeAttribute("user");
         return "redirect:home";
     }
 

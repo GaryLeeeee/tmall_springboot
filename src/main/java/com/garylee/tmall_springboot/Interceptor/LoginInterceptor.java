@@ -2,6 +2,8 @@ package com.garylee.tmall_springboot.Interceptor;
 
 import com.garylee.tmall_springboot.domain.User;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,11 +53,18 @@ public class LoginInterceptor implements HandlerInterceptor{
         String page = uri;
         //如果请求的uri在requireAuthPages中，则返回false(即跳转到login页面)
         if(begingWith(page,requireAuthPages)){
-            User user = (User) session.getAttribute("user");
-            if(user==null){
+            //shiro
+            Subject subject = SecurityUtils.getSubject();
+            if(!subject.isAuthenticated()){
                 response.sendRedirect("login");
                 return false;
             }
+
+//            User user = (User) session.getAttribute("user");
+//            if(user==null){
+//                response.sendRedirect("login");
+//                return false;
+//            }
         }
 
         return true;

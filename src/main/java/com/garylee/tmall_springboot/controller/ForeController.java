@@ -1,12 +1,19 @@
 package com.garylee.tmall_springboot.controller;
 
 import com.garylee.tmall_springboot.comparator.*;
+import com.garylee.tmall_springboot.dao.UserDao;
 import com.garylee.tmall_springboot.domain.*;
 import com.garylee.tmall_springboot.service.*;
 import com.garylee.tmall_springboot.util.Result;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
@@ -36,6 +43,8 @@ public class ForeController {
     OrderItemService orderItemService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    UserDao userDao;
     @RequestMapping("forehome")
     public List<Category> forehome(){
         List<Category> categories = categoryService.listAll();
@@ -56,7 +65,19 @@ public class ForeController {
             String message = "用户名已经被使用,不能使用";
             return Result.fail(message);
         }
-        user.setPassword(password);
+
+        //shiro
+        //盐,随机生成,用于与已有字符串拼接
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        //加密次数(即加密后的字符串继续加密)
+        int times = 2;
+        //加密算法
+        String algorithmName = "md5";
+        //生成加密码
+        String encodedPassword = new SimpleHash(algorithmName,password,salt,times).toString();
+        user.setSalt(salt);
+        user.setPassword(encodedPassword);
+
         userService.add(user);
         return Result.success();
     }
@@ -69,15 +90,34 @@ public class ForeController {
     public Object login(@RequestBody User userParam, HttpSession session){
         String name = userParam.getName();
         name = HtmlUtils.htmlEscape(name);
-        User user = userService.getUser(name,userParam.getPassword());
-        if(null!=user){
-            //将用户登陆信息存放到session中，前端即可判断用户是否登陆，如果登陆即可获取其信息
+
+        //shiro
+        //获取subject对象
+        Subject subject = SecurityUtils.getSubject();
+        //token传递输入的账号和密码
+        UsernamePasswordToken token = new UsernamePasswordToken(name,userParam.getPassword());
+        try {
+            //登陆操作,没报错的话则登陆成功
+            subject.login(token);
+            //根据name到数据库获取对应的user
+            User user = userDao.findByName(name);
+            //没catch到错误说明
             session.setAttribute("user",user);
             return Result.success();
-        }else {
+        }catch (AuthenticationException e){
             String message = "账号或密码错误";
             return Result.fail(message);
         }
+
+//        User user = userService.getUser(name,userParam.getPassword());
+//        if(null!=user){
+//            //将用户登陆信息存放到session中，前端即可判断用户是否登陆，如果登陆即可获取其信息
+//            session.setAttribute("user",user);
+//            return Result.success();
+//        }else {
+//            String message = "账号或密码错误";
+//            return Result.fail(message);
+//        }
     }
     @RequestMapping("/foreproduct/{pid}")
     public Object product(@PathVariable("pid")int pid){
@@ -100,10 +140,14 @@ public class ForeController {
         map.put("reviews",reviews);
         return Result.success(map);
     }
+    //前台判断是否登陆+shiro
     @GetMapping("forecheckLogin")
     public Object checkLogin(HttpSession session){
-        User user = (User) session.getAttribute("user");
-        if(null!=user)
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isAuthenticated())
+
+//        User user = (User) session.getAttribute("user");
+//        if(null!=user)
             return Result.success();
         return Result.fail("用户未登录");
     }
